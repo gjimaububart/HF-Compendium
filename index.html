@@ -91,7 +91,6 @@
 
 <body>
     <!-- Title -->
-    <h1>HF Compendium</h1>
     <button class="open-button" onclick="openForm()">Add Video</button>
 
     <div class="form-popup" id="myForm" style="display: none;">
@@ -227,11 +226,11 @@
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             videos.push(doc.data())
-            console.log(doc.id, " => ", doc.data());
+            //console.log(doc.id, " => ", doc.data());
         });
 
-        console.log("db videos = ")
-        console.log(videos)
+        //console.log("db videos = ")
+        //console.log(videos)
 
         // Fetch data from the JSON file
         fetch('videos.json')
@@ -240,11 +239,11 @@
                 const videoContainer = document.getElementById('videoContainer');
                 const searchBar = document.getElementById('searchBar');
 
-                console.log("Fetching videos... Total number of videos from firestoredb = " + videos.length)
+                //console.log("Fetching videos... Total number of videos from firestoredb = " + videos.length)
 
                 // Sort videos by descending date
                 videos.sort((a, b) => {
-                    console.log("Sorting videos by descending date")
+                    //console.log("Sorting videos by descending date")
                     return new Date(b.date) - new Date(a.date); // descending
                 })
 
@@ -258,8 +257,8 @@
 
                     // Pushes "mm-yyyy" as string into availableDates
                     availableDates.push((f.getMonth() + 1).toString() + " " + f.getFullYear().toString())
-                    console.log("Printing availableDates " + i + " (These are the videos grouped by their month-year)")
-                    console.log(availableDates[i])
+                    //console.log("Printing availableDates " + i + " (These are the videos grouped by their month-year)")
+                    //console.log(availableDates[i])
                 }
 
                 // Group dates into Month, Year
@@ -279,8 +278,8 @@
                 // Convert the grouped object into an array
                 const result = Object.values(groupedDates);
 
-                console.log('result of converting the data into something readable')
-                console.log(result);
+                //console.log('result of converting the data into something readable')
+                //console.log(result);
 
                 function addstuff(groupedDates) {
                     var toAdd = document.createDocumentFragment();
@@ -288,7 +287,7 @@
                     // Loop through all groupedDates
                     for (var p = 0, s = groupedDates.length; p < s; p++) {
 
-                        console.log("Entering group " + groupedDates[p].month + "-" + groupedDates[p].year + "... Loop number " + p)
+                        //console.log("Entering group " + groupedDates[p].month + "-" + groupedDates[p].year + "... Loop number " + p)
 
                         // Create new div for each GROUP (month-year)
                         var newDiv = document.createElement('div')
@@ -308,7 +307,7 @@
                         newH2.innerHTML = groupedDates[p].dates.length + " videos"
                         newDiv.appendChild(newH2);
 
-                        console.log("Adding to videoContainer newDiv.id = " + newDiv.id)
+                        //console.log("Adding to videoContainer newDiv.id = " + newDiv.id)
                         videoContainer.appendChild(newDiv)
 
                         // Creating new row
@@ -318,7 +317,7 @@
 
 
                         // Check for number of videos in month/year
-                        console.log("Number of videos in this group = " + groupedDates[p].dates.length)
+                        //console.log("Number of videos in this group = " + groupedDates[p].dates.length)
 
 
                         // Loop through all videos for each group
@@ -334,10 +333,10 @@
 
                             // Get game art
                             var gameArt = groupedDates[p].dates[o].game + "box.jpg"
-                            console.log("gameArt = " + gameArt)
+                            //console.log("gameArt = " + gameArt)
 
                             // Check for title
-                            console.log("Video title = " + groupedDates[p].dates[o].title)
+                            //console.log("Video title = " + groupedDates[p].dates[o].title)
                             videoDiv.innerHTML = `
                             <a href=` + groupedDates[p].dates[o].link + `>
                             <div class="video-thumbnail">
