@@ -77,6 +77,10 @@
             font-size: 16px;
             font-weight: bold;
         }
+
+
+
+
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -88,6 +92,35 @@
 <body>
     <!-- Title -->
     <h1>HF Compendium</h1>
+    
+    <button class="open-button" onclick="openForm()">Add Video</button>
+
+    <div class="form-popup" id="myForm" style="display: none;">
+        <form class="form-container">
+          <h1>Video Details</h1>
+      
+          <label for="date"><b>Date</b></label>
+          <input type="text" placeholder="Clip Date" name="date" id="date" required><br>
+      
+          <label for="game"><b>Game</b></label>
+          <input type="text" placeholder="Clip Game" name="game" id="game" required><br>
+
+          <label for="link"><b>Link</b></label>
+          <input type="text" placeholder="Clip Link" name="link" id="link" required><br>
+
+          <label for="tags"><b>Tags</b></label>
+          <input type="text" placeholder="Clip Tags (separate with comma)" name="tags" id="tags" required><br>
+
+          <label for="thumb"><b>Thumbnail</b></label>
+          <input type="text" placeholder="Clip Thumbnail" name="thumb" id="thumb" required><br>
+
+          <label for="title"><b>Title</b></label>
+          <input type="text" placeholder="Clip Title" name="title" id="title" required><br>
+      
+          <button type="submit" class="btn" id="addVideoBtn">Add</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
 
     <div class="container text-center">
         <div class="row">
@@ -126,7 +159,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
+        import { getFirestore, collection, getDocs , doc, addDoc} from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
         // https://firebase.google.com/docs/web/setup#available-libraries
 
         // Your web app's Firebase configuration
@@ -144,18 +177,59 @@
         const db = getFirestore(app)
 
 
-        // Retrieve data from 'videos' collection and push to videos array
-        var videos = []
-        const querySnapshot = await getDocs(collection(db, "videos"));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            videos.push(doc.data())
-            console.log(doc.id, " => ", doc.data());
+        // Retrieve data from 'videos' collection
+        async function getVideos() {
+            const videosCollection = collection(db, "videos");
+            const videosSnapshot = await getDocs(videosCollection);
+
+            // Map data to a usable array
+            const videos = videosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log("vvv videos from firestore in the line below vvv");
+            console.log(videos);
+            console.log("^^^ End of firestore print ^^^")
+        }
+
+        // Retrieve button ID
+        const addVideoBtn = document.getElementById("addVideoBtn");
+
+        // Add data to 'videos' collection
+        async function addVideo() {
+            const videosCollection = collection(db, "videos");
+
+            // Attach form data to variables
+            var clipDate = document.querySelector('#date').value;
+            var clipGame = document.querySelector('#game').value;
+            var clipLink = document.querySelector('#link').value;
+            var clipTags = document.querySelector('#tags').value;
+            var clipThumb = document.querySelector('#thumb').value;
+            var clipTitle = document.querySelector('#title').value;
+
+            // Turn tags data into array
+            var clipTagsArray = clipTags.split(',');
+
+            try {
+                // Add form data into collection with automated ID
+                const docRef = await addDoc(videosCollection, {
+                    date: clipDate,
+                    game: clipGame,
+                    link: clipLink,
+                    tags: clipTagsArray,
+                    thumb: clipThumb,
+                    title: clipTitle
+                });
+            } catch(err) {
+                console.error("Sumting happen: " + err);
+            }
+        }
+
+        // Attach addVideo function to button
+        addVideoBtn.addEventListener("click", function(x){
+            // Stop form submission
+            x.preventDefault();
+            addVideo();
         });
 
-        console.log("db videos = ")
-        console.log(videos)
-
+        getVideos();
 
         // Fetch data from the JSON file
         fetch('videos.json')
@@ -164,10 +238,10 @@
                 const videoContainer = document.getElementById('videoContainer');
                 const searchBar = document.getElementById('searchBar');
 
-                console.log("Fetching videos... Total number of videos from firestoredb = " + videos.length)
+                console.log("Fetching videos... Total number of videos = " + data.videos.length)
 
                 // Sort videos by descending date
-                videos.sort((a, b) => {
+                data.videos.sort((a, b) => {
                     console.log("Sorting videos by descending date")
                     return new Date(b.date) - new Date(a.date); // descending
                 })
@@ -175,8 +249,8 @@
                 // Get all months + years in videos
                 var availableDates = []
                 var availableYears = []
-                for (var i = 0, l = videos.length; i < l; i++) {
-                    var date = videos[i].date.split("-");
+                for (var i = 0, l = data.videos.length; i < l; i++) {
+                    var date = data.videos[i].date.split("-");
                     // turns string date (mm-dd-yyyy to date object (f))
                     var f = new Date(date[2], date[0] - 1, date[1]);
 
@@ -188,14 +262,14 @@
 
                 // Group dates into Month, Year
                 const groupedDates = {};
-                for (var z = 0, c = videos.length; z < c; z++) {
-                    const [month, day, year] = videos[z].date.split("-"); // Extract year, month, and day
+                for (var z = 0, c = data.videos.length; z < c; z++) {
+                    const [month, day, year] = data.videos[z].date.split("-"); // Extract year, month, and day
                     const key = `${month}-${year}`; // Create a unique month-year key
 
                     if (!groupedDates[key]) {
                         groupedDates[key] = { month, year, dates: [] }; // Initialize group
                     }
-                    groupedDates[key].dates.push(videos[z]); // Add full date to the group
+                    groupedDates[key].dates.push(data.videos[z]); // Add full date to the group
                 }
 
 
@@ -293,6 +367,19 @@
             .catch(error => {
                 console.error('Error fetching the JSON file:', error);
             });
+    </script>
+
+    <script>
+        // Open Form function
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
+
+        // Close Form function
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+
     </script>
 
 </body>
