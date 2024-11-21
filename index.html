@@ -6,7 +6,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HF Compendium</title>
+    <title>HF Video Finder</title>
     <style>
         .video {
             margin-bottom: 20px;
@@ -77,10 +77,6 @@
             font-size: 16px;
             font-weight: bold;
         }
-
-
-
-
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -91,36 +87,7 @@
 
 <body>
     <!-- Title -->
-    <h1>HF Compendium</h1>
-    
-    <button class="open-button" onclick="openForm()">Add Video</button>
-
-    <div class="form-popup" id="myForm" style="display: none;">
-        <form class="form-container">
-          <h1>Video Details</h1>
-      
-          <label for="date"><b>Date</b></label>
-          <input type="text" placeholder="Clip Date" name="date" id="date" required><br>
-      
-          <label for="game"><b>Game</b></label>
-          <input type="text" placeholder="Clip Game" name="game" id="game" required><br>
-
-          <label for="link"><b>Link</b></label>
-          <input type="text" placeholder="Clip Link" name="link" id="link" required><br>
-
-          <label for="tags"><b>Tags</b></label>
-          <input type="text" placeholder="Clip Tags (separate with comma)" name="tags" id="tags" required><br>
-
-          <label for="thumb"><b>Thumbnail</b></label>
-          <input type="text" placeholder="Clip Thumbnail" name="thumb" id="thumb" required><br>
-
-          <label for="title"><b>Title</b></label>
-          <input type="text" placeholder="Clip Title" name="title" id="title" required><br>
-      
-          <button type="submit" class="btn" id="addVideoBtn">Add</button>
-          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-        </form>
-    </div>
+    <h1>HF Video Finder</h1>
 
     <div class="container text-center">
         <div class="row">
@@ -156,81 +123,8 @@
     <div id="groupContainer" class="container">
     </div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, collection, getDocs , doc, addDoc} from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
-        // https://firebase.google.com/docs/web/setup#available-libraries
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD-qYfhF5tXaHdWU0LE1m__6D6q4-369Zg",
-            authDomain: "hfcompendium.firebaseapp.com",
-            projectId: "hfcompendium",
-            storageBucket: "hfcompendium.firebasestorage.app",
-            messagingSenderId: "296013499360",
-            appId: "1:296013499360:web:535c6f908cf46aa1ee3985"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app)
-
-
-        // Retrieve data from 'videos' collection
-        async function getVideos() {
-            const videosCollection = collection(db, "videos");
-            const videosSnapshot = await getDocs(videosCollection);
-
-            // Map data to a usable array
-            const videos = videosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log("vvv videos from firestore in the line below vvv");
-            console.log(videos);
-            console.log("^^^ End of firestore print ^^^")
-        }
-
-        // Retrieve button ID
-        const addVideoBtn = document.getElementById("addVideoBtn");
-
-        // Add data to 'videos' collection
-        async function addVideo() {
-            const videosCollection = collection(db, "videos");
-
-            // Attach form data to variables
-            var clipDate = document.querySelector('#date').value;
-            var clipGame = document.querySelector('#game').value;
-            var clipLink = document.querySelector('#link').value;
-            var clipTags = document.querySelector('#tags').value;
-            var clipThumb = document.querySelector('#thumb').value;
-            var clipTitle = document.querySelector('#title').value;
-
-            // Turn tags data into array
-            var clipTagsArray = clipTags.split(',');
-
-            try {
-                // Add form data into collection with automated ID
-                const docRef = await addDoc(videosCollection, {
-                    date: clipDate,
-                    game: clipGame,
-                    link: clipLink,
-                    tags: clipTagsArray,
-                    thumb: clipThumb,
-                    title: clipTitle
-                });
-            } catch(err) {
-                console.error("Sumting happen: " + err);
-            }
-        }
-
-        // Attach addVideo function to button
-        addVideoBtn.addEventListener("click", function(x){
-            // Stop form submission
-            x.preventDefault();
-            addVideo();
-        });
-
-        getVideos();
-
+    <script>
         // Fetch data from the JSON file
         fetch('videos.json')
             .then(response => response.json())
@@ -362,24 +256,11 @@
                 }
 
                 addstuff(result)
-
+                
             })
             .catch(error => {
                 console.error('Error fetching the JSON file:', error);
             });
-    </script>
-
-    <script>
-        // Open Form function
-        function openForm() {
-            document.getElementById("myForm").style.display = "block";
-        }
-
-        // Close Form function
-        function closeForm() {
-            document.getElementById("myForm").style.display = "none";
-        }
-
     </script>
 
 </body>
