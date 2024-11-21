@@ -144,18 +144,17 @@
         const db = getFirestore(app)
 
 
-        // Retrieve data from 'videos' collection
-        async function getVideos() {
-            const videosCollection = collection(db, "videos");
-            const videosSnapshot = await getDocs(videosCollection);
+        // Retrieve data from 'videos' collection and push to videos array
+        var videos = []
+        const querySnapshot = await getDocs(collection(db, "videos"));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            videos.push(doc.data())
+            console.log(doc.id, " => ", doc.data());
+        });
 
-            // Map data to a usable array
-            const videos = videosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log("vvv videos from firestore in the line below vvv");
-            console.log(videos)
-        }
-
-        getVideos();
+        console.log("db videos = ")
+        console.log(videos)
 
 
         // Fetch data from the JSON file
@@ -165,10 +164,10 @@
                 const videoContainer = document.getElementById('videoContainer');
                 const searchBar = document.getElementById('searchBar');
 
-                console.log("Fetching videos... Total number of videos = " + data.videos.length)
+                console.log("Fetching videos... Total number of videos from firestoredb = " + videos.length)
 
                 // Sort videos by descending date
-                data.videos.sort((a, b) => {
+                videos.sort((a, b) => {
                     console.log("Sorting videos by descending date")
                     return new Date(b.date) - new Date(a.date); // descending
                 })
@@ -176,8 +175,8 @@
                 // Get all months + years in videos
                 var availableDates = []
                 var availableYears = []
-                for (var i = 0, l = data.videos.length; i < l; i++) {
-                    var date = data.videos[i].date.split("-");
+                for (var i = 0, l = videos.length; i < l; i++) {
+                    var date = videos[i].date.split("-");
                     // turns string date (mm-dd-yyyy to date object (f))
                     var f = new Date(date[2], date[0] - 1, date[1]);
 
@@ -189,14 +188,14 @@
 
                 // Group dates into Month, Year
                 const groupedDates = {};
-                for (var z = 0, c = data.videos.length; z < c; z++) {
-                    const [month, day, year] = data.videos[z].date.split("-"); // Extract year, month, and day
+                for (var z = 0, c = videos.length; z < c; z++) {
+                    const [month, day, year] = videos[z].date.split("-"); // Extract year, month, and day
                     const key = `${month}-${year}`; // Create a unique month-year key
 
                     if (!groupedDates[key]) {
                         groupedDates[key] = { month, year, dates: [] }; // Initialize group
                     }
-                    groupedDates[key].dates.push(data.videos[z]); // Add full date to the group
+                    groupedDates[key].dates.push(videos[z]); // Add full date to the group
                 }
 
 
