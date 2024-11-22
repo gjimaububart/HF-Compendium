@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HF Compendium</title>
+    <style>
+        .video {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            width: fit-content;
+            max-width: 300px;
+        }
+
+        .date-group {
+            margin-bottom: 16px;
+            margin-top: 16px;
+            padding: 8px;
+            width: fit-content
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .video-details-container {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+        }
+
+        .game-image {
+            flex: 0 0 auto;
+            width: 50px;
+            height: 80px;
+            margin-right: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .game-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .time-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .video-info {
+            font-size: 16px;
+            color: gray;
+            font-weight: light;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .game-card {
+            width: 250px;
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-image {
+            width: 70%;
+            height: 70%;
+            border-radius: 8px;
+            margin: 8px;
+        }
+
+        .game-title {
+            font-size: 16px;
+            text-align: center;
+            margin: 0;
+            color: rgba(0, 0, 0, 0.7)
+        }
+
+        .game-count {
+            font-size: 14px;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 0px
+        }
+
+        a{
+            text-decoration: none;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Title -->
+    <div class="container text-left">
+        <h1>HF Compendium</h1>
+        <div class="row">
+            <div class="col">
+                <!-- Search Bar -->
+                <input id="searchBar" class="form-control" type="text" placeholder="Search for videos"
+                    aria-label=".form-control-lg example">
+            </div>
+            <div class="col">
+                <button id="searchBtn" type="button" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col">
+                <!-- Dropdown -->
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Starring
+                    </button>
+                    <form id="starringForm">
+                        <ul class="dropdown-menu">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Gibbs" id="starringGibbs">
+                                <label class="form-check-label" for="starringGibbs">
+                                    Gibbs
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="GJ" id="starringGj">
+                                <label class="form-check-label" for="starringGj">
+                                    GJ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Joshua" id="starringJoshua">
+                                <label class="form-check-label" for="starringJoshua">
+                                    Joshua
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Josh" id="starringJosh">
+                                <label class="form-check-label" for="starringJosh">
+                                    Josh
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Robbie" id="starringRobbie">
+                                <label class="form-check-label" for="starringRobbie">
+                                    Robbie
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Troy" id="starringTroy">
+                                <label class="form-check-label" for="starringTroy">
+                                    Troy
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Kayla" id="starringKayla">
+                                <label class="form-check-label" for="starringKayla">
+                                    Kayla
+                                </label>
+                            </div>
+                            <button id="starringBtn" type="button" class="btn btn-primary">Search</button>
+                        </ul>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="searchResults" class="container">
+    </div>
+
+    <div id="videoContainer" class="container" style="margin-top:32px; padding: 0px;">
+        <h3 id="gameName"></h3>
+    </div>
+
+    <div id="groupContainer" class="container">
+    </div>
+    <script src="js/scripts.js"> </script>
+
+    <script type="module">
+        sampleFunction()
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, addDoc } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-qYfhF5tXaHdWU0LE1m__6D6q4-369Zg",
+            authDomain: "hfcompendium.firebaseapp.com",
+            projectId: "hfcompendium",
+            storageBucket: "hfcompendium.firebasestorage.app",
+            messagingSenderId: "296013499360",
+            appId: "1:296013499360:web:535c6f908cf46aa1ee3985"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app)
+
+        // Retrieve button ID
+        const addVideoBtn = document.getElementById("addVideoBtn");
+
+        // Add data to 'videos' collection
+        async function addVideo() {
+            const videosCollection = collection(db, "videos");
+
+            // Attach form data to variables
+            var clipDate = document.querySelector('#date').value;
+            var clipGame = document.querySelector('#game').value;
+            var clipLink = document.querySelector('#link').value;
+            var clipTags = document.querySelector('#tags').value;
+            var clipThumb = document.querySelector('#thumb').value;
+            var clipTitle = document.querySelector('#title').value;
+
+            // Turn tags data into array
+            var clipTagsArray = clipTags.split(',');
+
+            try {
+                // Add form data into collection with automated ID
+                const docRef = await addDoc(videosCollection, {
+                    date: clipDate,
+                    game: clipGame,
+                    link: clipLink,
+                    tags: clipTagsArray,
+                    thumb: clipThumb,
+                    title: clipTitle
+                });
+            } catch (err) {
+                console.error("Sumting happen: " + err);
+            }
+        }
+
+        // Retrieve data from 'videos' collection and push to videos array
+        var videos = []
+        const querySnapshot = await getDocs(collection(db, "videos"));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            videos.push(doc.data())
+            //console.log(doc.id, " => ", doc.data());
+        });
+
+        // Get games
+        var games = []
+        games = getGames(videos)
+        console.log(games)
+
+        const videoContainer = document.getElementById('videoContainer');
+        const searchBar = document.getElementById('searchBar');
+
+        // Sort videos by descending date
+        sortDescending(videos)
+
+        // Gets Months & Years of input videos (January 2020)
+        var availableDates = []
+        availableDates = getMonthsYears(videos)
+
+        // Groups dates
+        var groupedDates = []
+        groupedDates = groupDates(videos)
+
+        // Convert the grouped object into an array
+        const result = Object.values(groupedDates);
+
+        //console.log('result of converting the data into something readable')
+        //console.log(result);
+
+        // displays games
+        displayGames(games)
+
+        // Click button for search
+        document.getElementById('searchBtn').onclick = function () {
+            console.log("Button clicked");
+            searchTitles(videos);
+        };
+
+        // Search function
+        async function searchTitles(videos) {
+
+            // Get text from search bar
+            const queryText = document.getElementById('searchBar').value.toLowerCase();
+            console.log("queryText = " + queryText);
+
+            // Query videos[]...
+            videos = videos
+            if (queryText.trim() === '') return; // Exit if the input is empty
+
+            // Query videos
+            for (var j = 0, k = videos.length; j < k; j++) {
+                var resultsArray = []
+                if (videos[j].title.includes(queryText)) {
+                    console.log("Result found for " + queryText)
+                    resultsArray.push(videos[j])
+                    console.log("Results = ")
+                    console.log(resultsArray)
+                }
+            }
+
+            window.location.href = "searchresults.html?search=" + queryText + ""
+
+            // Displays results
+            displayDates(resultsArray)
+        }
+
+        async function starringFilter() {
+            const form = document.getElementById('starringForm');
+            const formData = [];
+            var starringQuery = ""
+
+            for (const element of form.elements) {
+                if (element.checked) { // Only include inputs with a name attribute
+                    formData.push(element.value)
+                }
+            }
+
+            for (var i = 0; i < formData.length; i++) {
+                starringQuery = starringQuery + formData[i] + "+"
+            }
+
+            window.location.href = "starringresults.html?starring=" + starringQuery + ""
+
+        }
+
+        var gameH1 = document.getElementById('gameName')
+        gameH1.innerHTML = games.length + " total games"
+
+    </script>
+
+    <script>
+        // Open Form function
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
+
+        // Close Form function
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+
+    </script>
+</body>
+
+</html>

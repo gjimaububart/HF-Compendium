@@ -78,9 +78,18 @@
             font-weight: bold;
         }
 
+        .month-year{
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0px;
+        }
 
-
-
+        .video-counter{
+            font-size: 16px;
+            font-weight: 500;
+            color: rgb(110, 110, 110);
+            margin-bottom: 8px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -129,26 +138,72 @@
                     aria-label=".form-control-lg example">
             </div>
             <div class="col">
-                <button id="searchBtn" type="button" class="btn btn-primary">Primary</button>
+                <button id="searchBtn" type="button" class="btn btn-primary">Search</button>
             </div>
             <div class="col">
                 <!-- Dropdown -->
+
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Starring
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Biggs</a></li>
-                        <li><a class="dropdown-item" href="#">Gj'd</a></li>
-                        <li><a class="dropdown-item" href="#">Josh</a></li>
-                        <li><a class="dropdown-item" href="#">Juiceva</a></li>
-                        <li><a class="dropdown-item" href="#">Robert-John Paul II</a></li>
-                        <li><a class="dropdown-item" href="#">troy</a></li>
-                    </ul>
+                    <form id="starringForm">
+                        <ul class="dropdown-menu">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Gibbs" id="starringGibbs">
+                                <label class="form-check-label" for="starringGibbs">
+                                    Gibbs
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="GJ" id="starringGj">
+                                <label class="form-check-label" for="starringGj">
+                                    GJ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Joshua" id="starringJoshua">
+                                <label class="form-check-label" for="starringJoshua">
+                                    Joshua
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Josh" id="starringJosh">
+                                <label class="form-check-label" for="starringJosh">
+                                    Josh
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Robbie" id="starringRobbie">
+                                <label class="form-check-label" for="starringRobbie">
+                                    Robbie
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Troy" id="starringTroy">
+                                <label class="form-check-label" for="starringTroy">
+                                    Troy
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Kayla" id="starringKayla">
+                                <label class="form-check-label" for="starringKayla">
+                                    Kayla
+                                </label>
+                            </div>
+                            <button id="starringBtn" type="button" class="btn btn-primary">Search</button>
+                        </ul>
+                    </form>
                 </div>
+
             </div>
         </div>
+
+        <button onclick="location.href = 'games.html'" type="button" id="gamesBtn"
+            class="btn btn-secondary">Games</button>
+
+
     </div>
 
     <div id="searchResults" class="container">
@@ -159,11 +214,13 @@
 
     <div id="groupContainer" class="container">
     </div>
+    <script src="js/scripts.js"> </script>
 
     <script type="module">
+
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, collection, getDocs , doc, addDoc} from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
+        import { getFirestore, collection, getDocs, doc, addDoc } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
         // https://firebase.google.com/docs/web/setup#available-libraries
 
         // Your web app's Firebase configuration
@@ -208,16 +265,21 @@
                     thumb: clipThumb,
                     title: clipTitle
                 });
-            } catch(err) {
+            } catch (err) {
                 console.error("Sumting happen: " + err);
             }
         }
 
         // Attach addVideo function to button
-        addVideoBtn.addEventListener("click", function(x){
+        addVideoBtn.addEventListener("click", function (x) {
             // Stop form submission
             x.preventDefault();
             addVideo();
+        });
+
+        // Attach filterStarring function to button
+        starringBtn.addEventListener("click", function (x) {
+            starringFilter();
         });
 
         // Retrieve data from 'videos' collection and push to videos array
@@ -232,112 +294,91 @@
         //console.log("db videos = ")
         //console.log(videos)
 
-        // Fetch data from the JSON file
-        fetch('videos.json')
-            .then(response => response.json())
-            .then(data => {
-                const videoContainer = document.getElementById('videoContainer');
-                const searchBar = document.getElementById('searchBar');
+        const videoContainer = document.getElementById('videoContainer');
+        const searchBar = document.getElementById('searchBar');
 
-                //console.log("Fetching videos... Total number of videos from firestoredb = " + videos.length)
+        // Sort videos by descending date
+        sortDescending(videos)
 
-                // Sort videos by descending date
-                videos.sort((a, b) => {
-                    //console.log("Sorting videos by descending date")
-                    return new Date(b.date) - new Date(a.date); // descending
-                })
+        // Gets Months & Years of input videos (January 2020)
+        var availableDates = []
+        availableDates = getMonthsYears(videos)
 
-                // Get all months + years in videos
-                var availableDates = []
-                var availableYears = []
-                for (var i = 0, l = videos.length; i < l; i++) {
-                    var date = videos[i].date.split("-");
-                    // turns string date (mm-dd-yyyy to date object (f))
-                    var f = new Date(date[2], date[0] - 1, date[1]);
+        // Groups dates
+        var groupedDates = []
+        groupedDates = groupDates(videos)
 
-                    // Pushes "mm-yyyy" as string into availableDates
-                    availableDates.push((f.getMonth() + 1).toString() + " " + f.getFullYear().toString())
-                    //console.log("Printing availableDates " + i + " (These are the videos grouped by their month-year)")
-                    //console.log(availableDates[i])
-                }
+        // Convert the grouped object into an array
+        const result = Object.values(groupedDates);
 
-                // Group dates into Month, Year
-                const groupedDates = {};
-                for (var z = 0, c = videos.length; z < c; z++) {
-                    const [month, day, year] = videos[z].date.split("-"); // Extract year, month, and day
-                    const key = `${month}-${year}`; // Create a unique month-year key
+        //console.log('result of converting the data into something readable')
+        //console.log(result);
 
-                    if (!groupedDates[key]) {
-                        groupedDates[key] = { month, year, dates: [] }; // Initialize group
-                    }
-                    groupedDates[key].dates.push(videos[z]); // Add full date to the group
-                }
+        function displayDates(groupedDates) {
 
-                
+            // Adds div to draw videos in
+            var addContainer = document.createElement("div")
+            addContainer.className = "videoContainer"
+            addContainer.class = "container"
+            document.body.appendChild(addContainer)
 
-                // Convert the grouped object into an array
-                const result = Object.values(groupedDates);
+            // Loop through all groupedDates
+            for (var p = 0, s = groupedDates.length; p < s; p++) {
 
-                //console.log('result of converting the data into something readable')
-                //console.log(result);
+                //console.log("Entering group " + groupedDates[p].month + "-" + groupedDates[p].year + "... Loop number " + p)
 
-                function addstuff(groupedDates) {
-                    var toAdd = document.createDocumentFragment();
+                // Create new div for each GROUP (month-year)
+                var newDiv = document.createElement('div')
+                newDiv.id = (groupedDates[p].month + "-" + groupedDates[p].year).toString()
+                newDiv.className = 'date-group';
 
-                    // Loop through all groupedDates
-                    for (var p = 0, s = groupedDates.length; p < s; p++) {
-
-                        //console.log("Entering group " + groupedDates[p].month + "-" + groupedDates[p].year + "... Loop number " + p)
-
-                        // Create new div for each GROUP (month-year)
-                        var newDiv = document.createElement('div')
-                        newDiv.id = (groupedDates[p].month + "-" + groupedDates[p].year).toString()
-                        newDiv.className = 'date-group';
-
-                        // Convert number month to string month
-                        var stringMonth = Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(groupedDates[p].month)); // January
+                // Convert number month to string month
+                var stringMonth = Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(groupedDates[p].month)); // January
 
 
-                        // Create new H1 for month + year
-                        var newH1 = document.createElement('h1')
-                        newH1.innerHTML = stringMonth + " " + groupedDates[p].year
-                        newDiv.appendChild(newH1);
+                // Create new H1 for month + year
+                var newH1 = document.createElement('p')
+                newH1.className = "month-year"
+                newH1.innerHTML = stringMonth + " " + groupedDates[p].year
+                newDiv.appendChild(newH1);
 
-                        var newH2 = document.createElement('h2')
-                        newH2.innerHTML = groupedDates[p].dates.length + " videos"
-                        newDiv.appendChild(newH2);
+                // Create new H2 for video counter
+                var newH2 = document.createElement('p')
+                newH2.className = "video-counter"
+                newH2.innerHTML = groupedDates[p].dates.length + " videos"
+                newDiv.appendChild(newH2);
 
-                        //console.log("Adding to videoContainer newDiv.id = " + newDiv.id)
-                        videoContainer.appendChild(newDiv)
+                //console.log("Adding to videoContainer newDiv.id = " + newDiv.id)
+                videoContainer.appendChild(newDiv)
 
-                        // Creating new row
-                        var newRow = document.createElement('row')
-                        newRow.className = 'row row-cols-auto'
-                        newDiv.appendChild(newRow)
-
-
-                        // Check for number of videos in month/year
-                        //console.log("Number of videos in this group = " + groupedDates[p].dates.length)
+                // Creating new row
+                var newRow = document.createElement('row')
+                newRow.className = 'row row-cols-auto'
+                newDiv.appendChild(newRow)
 
 
-                        // Loop through all videos for each group
-                        for (var o = 0, q = groupedDates[p].dates.length; o < q; o++) {
-                            // Create Col
-                            var newCol = document.createElement('col')
-                            newCol.className = 'col'
+                // Check for number of videos in month/year
+                //console.log("Number of videos in this group = " + groupedDates[p].dates.length)
 
-                            // Create video
-                            var videoDiv = document.createElement('div');
-                            videoDiv.className = 'video';
-                            videoDiv.id = groupedDates[p].dates[o].date
 
-                            // Get game art
-                            var gameArt = groupedDates[p].dates[o].game + "box.jpg"
-                            //console.log("gameArt = " + gameArt)
+                // Loop through all videos for each group
+                for (var o = 0, q = groupedDates[p].dates.length; o < q; o++) {
+                    // Create Col
+                    var newCol = document.createElement('col')
+                    newCol.className = 'col'
 
-                            // Check for title
-                            //console.log("Video title = " + groupedDates[p].dates[o].title)
-                            videoDiv.innerHTML = `
+                    // Create video
+                    var videoDiv = document.createElement('div');
+                    videoDiv.className = 'video';
+                    videoDiv.id = groupedDates[p].dates[o].date
+
+                    // Get game art
+                    var gameArt = groupedDates[p].dates[o].game + "box.jpg"
+                    //console.log("gameArt = " + gameArt)
+
+                    // Check for title
+                    //console.log("Video title = " + groupedDates[p].dates[o].title)
+                    videoDiv.innerHTML = `
                             <a href=` + groupedDates[p].dates[o].link + `>
                             <div class="video-thumbnail">
                                 <img src="` + groupedDates[p].dates[o].thumb + `">
@@ -356,28 +397,22 @@
                                 </div>
                             </div>
                         `;
-                            newCol.appendChild(videoDiv)
-                            newRow.appendChild(newCol)
-                        }
-                    }
+                    newCol.appendChild(videoDiv)
+                    newRow.appendChild(newCol)
                 }
+            }
+        }
 
-                addstuff(result)
-
-            })
-            .catch(error => {
-                console.error('Error fetching the JSON file:', error);
-            });
-
+        displayDates(result)
 
         // Click button for search
         document.getElementById('searchBtn').onclick = function () {
             console.log("Button clicked");
-            searchUsers(videos);
+            searchTitles(videos);
         };
 
         // Search function
-        async function searchUsers(videos) {
+        async function searchTitles(videos) {
 
             // Get text from search bar
             const queryText = document.getElementById('searchBar').value.toLowerCase();
@@ -397,8 +432,33 @@
                     console.log(resultsArray)
                 }
             }
+
+            window.location.href = "searchresults.html?search=" + queryText + ""
+
+            // Displays results
+            displayDates(resultsArray)
+        }
+
+        async function starringFilter() {
+            const form = document.getElementById('starringForm');
+            const formData = [];
+            var starringQuery = ""
+
+            for (const element of form.elements) {
+                if (element.checked) { // Only include inputs with a name attribute
+                    formData.push(element.value)
+                }
+            }
+
+            for (var i = 0; i < formData.length; i++) {
+                starringQuery = starringQuery + formData[i] + "+"
+            }
+
+            window.location.href = "starringresults.html?starring=" + starringQuery + ""
+
         }
     </script>
+
     <script>
         // Open Form function
         function openForm() {
