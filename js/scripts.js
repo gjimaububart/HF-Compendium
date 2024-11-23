@@ -168,4 +168,29 @@ function displayGames(games) {
     }
 }
 
+// Function to export to JSON file given an array of objects usage (arrayofobjects, "filename.json")
+function exportToJsonFile(data, fileName = 'data.json') {
+    // Convert the data to JSON format
+    const jsonData = JSON.stringify(data, null, 2);
+
+    // Create a blob with the JSON data
+    const blob = new Blob([jsonData], { type: 'application/json' });
+
+    // Create a link element
+    const link = document.createElement('a');
+
+    // Set the URL to the blob
+    link.href = URL.createObjectURL(blob);
+
+    // Set the download attribute with the file name
+    link.download = fileName;
+
+    // Programmatically click the link to trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up and remove the link element
+    document.body.removeChild(link);
+}
+
 

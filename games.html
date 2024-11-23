@@ -213,6 +213,10 @@
         import { getFirestore, collection, getDocs, doc, addDoc } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js'
         // https://firebase.google.com/docs/web/setup#available-libraries
 
+        import data from "./videos.json" with { type: "json" };
+        var videos = []
+        videos = data
+
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD-qYfhF5tXaHdWU0LE1m__6D6q4-369Zg",
@@ -260,14 +264,14 @@
             }
         }
 
-        // Retrieve data from 'videos' collection and push to videos array
-        var videos = []
-        const querySnapshot = await getDocs(collection(db, "videos"));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            videos.push(doc.data())
-            //console.log(doc.id, " => ", doc.data());
-        });
+        // // Retrieve data from 'videos' collection and push to videos array
+        // var videos = []
+        // const querySnapshot = await getDocs(collection(db, "videos"));
+        // querySnapshot.forEach((doc) => {
+        //     // doc.data() is never undefined for query doc snapshots
+        //     videos.push(doc.data())
+        //     //console.log(doc.id, " => ", doc.data());
+        // });
 
         // Get games
         var games = []

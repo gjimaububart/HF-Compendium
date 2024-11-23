@@ -183,14 +183,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app)
 
-        // Retrieve data from 'videos' collection and push to videos array
+        import data from "./videos.json" with { type: "json" };
         var videos = []
-        const querySnapshot = await getDocs(collection(db, "videos"));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            videos.push(doc.data())
-            //console.log(doc.id, " => ", doc.data());
-        });
+        videos = data
 
         // Get starring names from URL
         const splitQuery = getStarringParams()

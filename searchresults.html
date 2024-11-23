@@ -87,36 +87,6 @@
 
 <body>
     <!-- Title -->
-    <button class="open-button" onclick="openForm()">Add Video</button>
-
-    <div class="form-popup" id="myForm" style="display: none;">
-        <form class="form-container">
-            <h1>Video Details</h1>
-
-            <label for="date"><b>Date</b></label>
-            <input type="text" placeholder="Clip Date" name="date" id="date" required><br>
-
-            <label for="game"><b>Game</b></label>
-            <input type="text" placeholder="Clip Game" name="game" id="game" required><br>
-
-            <label for="link"><b>Link</b></label>
-            <input type="text" placeholder="Clip Link" name="link" id="link" required><br>
-
-            <label for="tags"><b>Tags</b></label>
-            <input type="text" placeholder="Clip Tags (separate with comma)" name="tags" id="tags" required><br>
-
-            <label for="thumb"><b>Thumbnail</b></label>
-            <input type="text" placeholder="Clip Thumbnail" name="thumb" id="thumb" required><br>
-
-            <label for="title"><b>Title</b></label>
-            <input type="text" placeholder="Clip Title" name="title" id="title" required><br>
-
-            <button type="submit" class="btn" id="addVideoBtn">Add</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-        </form>
-    </div>
-
-
     <div class="container text-left">
         <h1>HF Compendium</h1>
         <div class="row">
@@ -218,54 +188,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app)
 
-        // Retrieve button ID
-        const addVideoBtn = document.getElementById("addVideoBtn");
-
-        // Add data to 'videos' collection
-        async function addVideo() {
-            const videosCollection = collection(db, "videos");
-
-            // Attach form data to variables
-            var clipDate = document.querySelector('#date').value;
-            var clipGame = document.querySelector('#game').value;
-            var clipLink = document.querySelector('#link').value;
-            var clipTags = document.querySelector('#tags').value;
-            var clipThumb = document.querySelector('#thumb').value;
-            var clipTitle = document.querySelector('#title').value;
-
-            // Turn tags data into array
-            var clipTagsArray = clipTags.split(',');
-
-            try {
-                // Add form data into collection with automated ID
-                const docRef = await addDoc(videosCollection, {
-                    date: clipDate,
-                    game: clipGame,
-                    link: clipLink,
-                    tags: clipTagsArray,
-                    thumb: clipThumb,
-                    title: clipTitle
-                });
-            } catch (err) {
-                console.error("Sumting happen: " + err);
-            }
-        }
-
-        // Attach addVideo function to button
-        addVideoBtn.addEventListener("click", function (x) {
-            // Stop form submission
-            x.preventDefault();
-            addVideo();
-        });
-
-        // Retrieve data from 'videos' collection and push to videos array
+        import data from "./videos.json" with { type: "json" };
         var videos = []
-        const querySnapshot = await getDocs(collection(db, "videos"));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            videos.push(doc.data())
-            //console.log(doc.id, " => ", doc.data());
-        });
+        videos = data
 
         var resultVideos = []
         for (var i = 0; i < videos.length; i++) {
