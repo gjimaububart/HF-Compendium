@@ -8,13 +8,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HF Compendium</title>
     <style>
+
         .video {
             margin-bottom: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
             width: fit-content;
             max-width: 300px;
+            padding: 4px;
+        }
+
+        .video:hover {
+            margin-bottom: 20px;
+            padding: 4px;
+            width: fit-content;
+            max-width: 300px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
         }
 
         .date-group {
@@ -68,18 +76,22 @@
         }
 
         .video-info {
-            font-size: 16px;
-            color: gray;
+            font-size: 14px;
+            font-weight: 500;
+            color: #777777;
             font-weight: light;
         }
 
         .video-title {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #181818;
         }
 
         .month-year {
             font-size: 24px;
+            color: #181818;
             font-weight: 600;
             margin: 0px;
         }
@@ -87,7 +99,7 @@
         .video-counter {
             font-size: 16px;
             font-weight: 500;
-            color: rgb(110, 110, 110);
+            color: #777777;
             margin-bottom: 8px;
         }
     </style>
@@ -99,21 +111,26 @@
 </head>
 
 <body>
-    <!-- Title -->
-    <div class="container text-left">
-        <h1>HF Compendium</h1>
-        <div class="row">
-            <div class="col">
-                <!-- Search Bar -->
-                <input id="searchBar" class="form-control" type="text" placeholder="Search for videos"
-                    aria-label=".form-control-lg example">
-            </div>
-            <div class="col">
-                <button id="searchBtn" type="button" class="btn btn-primary">Search</button>
-            </div>
-            <div class="col">
-                <!-- Dropdown -->
-
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #18181B;">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="font-size: 20px; font-weight: 700; color: white">HF
+                Compendium</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="games.html" style="font-weight: 500; color: white">Browse Games</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input id="searchBar" class="form-control me-2" type="search" placeholder="Title search"
+                        aria-label="Search">
+                    <button id="searchBtn" type="button" class="btn btn-primary">Search</button>
+                </form>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -167,15 +184,11 @@
                         </ul>
                     </form>
                 </div>
-
             </div>
         </div>
-
-        <button onclick="location.href = 'games.html'" type="button" id="gamesBtn"
-            class="btn btn-secondary">Games</button>
+    </nav>
 
 
-    </div>
 
     <div id="searchResults" class="container">
     </div>
@@ -324,9 +337,10 @@
                                     <div class="video-title">` + groupedDates[p].dates[o].title + `</div>
                                     <div class="video-info">` + groupedDates[p].dates[o].game + `</div>
                                     <div class="video-info">` + groupedDates[p].dates[o].date + `</div>
-                                    <div class="video-info">Starring: ` + groupedDates[p].dates[o].tags + `</div>
+                                    
                                 </div>
                             </div>
+                            <div class="video-info" style="margin-top: 4px;">Starring: ` + groupedDates[p].dates[o].tags + `</div>
                         `;
                     newCol.appendChild(videoDiv)
                     newRow.appendChild(newCol)

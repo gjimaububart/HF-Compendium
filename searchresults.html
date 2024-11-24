@@ -87,68 +87,89 @@
 
 <body>
     <!-- Title -->
-    <div class="container text-left">
-        <h1>HF Compendium</h1>
-        <div class="row">
-            <div class="col">
-                <!-- Search Bar -->
-                <input id="searchBar" class="form-control" type="text" placeholder="Search for videos"
-                    aria-label=".form-control-lg example">
-            </div>
-            <div class="col">
-                <button id="searchBtn" type="button" class="btn btn-primary">Search</button>
-            </div>
-            <div class="col">
-                <!-- Dropdown -->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #18181B;">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="font-size: 20px; font-weight: 700; color: white">HF
+                Compendium</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="games.html" style="font-weight: 500; color: white">Browse Games</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input id="searchBar" class="form-control me-2" type="search" placeholder="Title search"
+                        aria-label="Search">
+                    <button id="searchBtn" type="button" class="btn btn-primary">Search</button>
+                </form>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Starring
                     </button>
-                    <ul class="dropdown-menu">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Gibbs
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                GJ
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Joshua
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Josh
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Robbie
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Troy
-                            </label>
-                        </div>
-                    </ul>
+                    <form id="starringForm">
+                        <ul class="dropdown-menu">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Gibbs" id="starringGibbs">
+                                <label class="form-check-label" for="starringGibbs">
+                                    Gibbs
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="GJ" id="starringGj">
+                                <label class="form-check-label" for="starringGj">
+                                    GJ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Joshua" id="starringJoshua">
+                                <label class="form-check-label" for="starringJoshua">
+                                    Joshua
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Josh" id="starringJosh">
+                                <label class="form-check-label" for="starringJosh">
+                                    Josh
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Robbie" id="starringRobbie">
+                                <label class="form-check-label" for="starringRobbie">
+                                    Robbie
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Troy" id="starringTroy">
+                                <label class="form-check-label" for="starringTroy">
+                                    Troy
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Kayla" id="starringKayla">
+                                <label class="form-check-label" for="starringKayla">
+                                    Kayla
+                                </label>
+                            </div>
+                            <button id="starringBtn" type="button" class="btn btn-primary">Search</button>
+                        </ul>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
+    </nav>
+
+
+
+
 
     <div id="searchResults" class="container">
+        <p style="font-size: 24px; font-weight: 400; margin-top: 32px;" id="videoCount"></p>
     </div>
 
     <div id="videoContainer" class="container">
@@ -349,20 +370,11 @@
             // Displays results
             displayDates(resultsArray)
         }
+
+        var gameH2 = document.getElementById('videoCount')
+        gameH2.innerHTML = "Results for: " +  searchQuery;
     </script>
 
-    <script>
-        // Open Form function
-        function openForm() {
-            document.getElementById("myForm").style.display = "block";
-        }
-
-        // Close Form function
-        function closeForm() {
-            document.getElementById("myForm").style.display = "none";
-        }
-
-    </script>
 </body>
 
 </html>
