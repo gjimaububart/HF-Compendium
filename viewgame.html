@@ -90,6 +90,22 @@
             color: rgb(110, 110, 110);
             margin-bottom: 16px;
         }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -319,7 +335,7 @@
                     // Check for title
                     //console.log("Video title = " + groupedDates[p].dates[o].title)
                     videoDiv.innerHTML = `
-                            <a href=` + groupedDates[p].dates[o].link + `>
+                            <a target="_blank" href=` + groupedDates[p].dates[o].link + `>
                             <div class="video-thumbnail">
                                 <img src="` + groupedDates[p].dates[o].thumb + `">
                             </div>
